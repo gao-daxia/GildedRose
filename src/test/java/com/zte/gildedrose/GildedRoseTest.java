@@ -3,15 +3,25 @@ package com.zte.gildedrose;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class GildedRoseTest
 {
+
+    @Test
+    public void foo()
+    {
+        GildedRose app = getGildedRose("foo", 0, 0);
+
+        app.updateQuality();
+
+        assertEquals("foo", app.getItems()[0].getName());
+    }
+
     @Test
     public void should_update_common_product_quality() throws Exception
     {
-        GildedRose app = new GildedRose();
-
 //        List<Item> items = ImmutableList.of(
 //                new Item("+5 Dexterity Vest", 10, 20),
 //                new Item("Aged Brie", 2, 0),
@@ -21,11 +31,29 @@ public class GildedRoseTest
 //                new Item("Conjured Mana Cake", 3, 6)
 //        );
 
-        final Item item = new Item("+5 Dexterity Vest", 10, 20);
+        GildedRose app = getGildedRose("foo", 10, 20);
 
-        app.updatequality(item);
+        app.updateQuality();
 
-        assertThat(item.getQuality(), is(19));
-        assertThat(item.getSellIn(), is(9));
+        assertThat(app.getItems()[0].getQuality(), is(19));
+        assertThat(app.getItems()[0].getSellIn(), is(9));
+    }
+
+    @Test
+    public void should_update_common_product_quality_twice() throws Exception
+    {
+        GildedRose app = getGildedRose("foo", 10, 20);
+
+        app.updateQuality();
+        app.updateQuality();
+
+        assertThat(app.getItems()[0].getQuality(), is(18));
+        assertThat(app.getItems()[0].getSellIn(), is(8));
+    }
+
+    private GildedRose getGildedRose(String productName, int sellIn, int quality)
+    {
+        Item[] items = new Item[]{new Item(productName, sellIn, quality)};
+        return new GildedRose(items);
     }
 }
